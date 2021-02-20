@@ -33,12 +33,6 @@ $LOCAL-VARIABLES: (
 :host {
 	display: block;
 	position: relative;
-
-   @media screen and (max-height: $pfe-modal--breakpoint--medium) {
-	   Padding: pfe-local( Padding, 
-		   $fallback: "0 0 0 calc( #{pfe-var(container-padding)} * 2)" 
-	   );
-   }
 }
 
 .pfe-modal {
@@ -73,9 +67,10 @@ $LOCAL-VARIABLES: (
 	}
 	&__window {
 		--theme: #{pfe-local(theme)};
-		//todo , this is a workaround:
+		//@todo , this is a workaround for issue 1090
 		@include pfe-set-broadcast-theme(light);
 		position: relative;
+		top: pfe-local(Top);
 		max-width: pfe-local(MaxWidth--mobile);
 		min-width: pfe-local(MinWidth);
 		max-height: pfe-local(MaxHeight);
@@ -109,22 +104,22 @@ $LOCAL-VARIABLES: (
 	&__content {
 		overflow-y: pfe-local(Overflow, $region: overlay);
 		overscroll-behavior: contain;
-		height: pfe-local(MaxHeight);
+		max-height: pfe-local(MaxHeight);
 		padding: pfe-local(Padding);
 		box-sizing: border-box;
 
 		@media screen and (max-height: $pfe-modal--breakpoint--medium) {
-			--pfe-modal--Padding:  
-				#{pfe-var(container-padding) }
-				calc(#{pfe-var(container-padding)} * 3) 
-				#{pfe-var(container-padding) }
-				#{pfe-var(container-padding)}
-			;
-			
+			Padding: pfe-local( Padding, 
+				$fallback: " 
+	            	#{pfe-var(container-padding) }
+	            	calc(#{pfe-var(container-padding)} * 3)
+	            	#{pfe-var(container-padding) }
+	            	#{pfe-var(container-padding)}
+				" 
+			);
 		}
 
 		:host(:not([has_header])) & {
-
 			// Remove margin-top on the first slotted element that is not the header.
 			::slotted(*:nth-child(2)),
 			::slotted(*:nth-child(1)) {
@@ -132,8 +127,8 @@ $LOCAL-VARIABLES: (
 			}
 		}
 		:host([pfe-media]) & {
-			--pfe-modal__overlay--Overflow: hidden;
-			--pfe-modal--Padding: 0px;
+			overflow-y: pfe-local(Overflow, $region: overlay, $fallback: hidden);
+  			padding: pfe-local(Padding, $fallback: 0);
 			text-align: center;
 			height: auto;
 
@@ -181,16 +176,19 @@ $LOCAL-VARIABLES: (
 			width: 	pfe-var(ui--element--size);
 			height: pfe-local(size, $region: close);
 			width: 	pfe-local(size, $region: close);
+
+			:host([pfe-media]) & {
+				height: pfe-local(size, $region: close, $fallback: 15px);
+				width: 	pfe-local(size, $region: close, $fallback: 15px);
+			}
 		}
 
 		:host([pfe-media]) & {
 			top: 0px; 
 			right: 0;
 			border-radius: 3px;
-			padding: 7px;
-			--pfe-modal__close--size: 15px;
-			--pfe-modal__close--Padding: 10px;
-			--pfe-modal__close--BackgroundColor: #ffffff63;
+			padding: pfe-local(Padding, $region: close, $fallback: 10px);
+			background-color: pfe-local(BackgroundColor, $region: close, $fallback: rgba(255, 255, 255, 0.65));
 		}
 	}
 }
